@@ -38,7 +38,11 @@ type File struct {
 }
 
 func (f *File) GetName() string {
-	return strings.TrimSuffix(f.Path, "/")
+	name := baseName(f.Path)
+	if name == "" {
+		name = baseName(f.filePath)
+	}
+	return strings.TrimSuffix(name, "/")
 }
 
 func (f *File) GetSize() int64 {
@@ -81,7 +85,7 @@ func (f *File) Thumb() string {
 
 func (f *File) apiPath() string {
 	if f.Path != "" {
-		return f.Path
+		return baseName(f.Path)
 	}
 	return baseName(f.filePath)
 }

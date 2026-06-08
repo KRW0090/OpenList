@@ -67,6 +67,18 @@ func joinAPIPath(parent, name string, isFolder bool) string {
 	return full
 }
 
+func resolveFilePath(parent, filePath string, isFolder bool) string {
+	parent = normalizeDirPath(parent)
+	filePath = normalizePath(filePath)
+	if parent == "" || strings.HasPrefix(filePath, parent) {
+		if isFolder && filePath != "" && !strings.HasSuffix(filePath, "/") {
+			filePath += "/"
+		}
+		return filePath
+	}
+	return joinAPIPath(parent, filePath, isFolder)
+}
+
 func formatDeleteTime(t time.Time) string {
 	if t.IsZero() {
 		return time.UnixMilli(0).UTC().Format("2006-01-02T15:04:05.000Z")
@@ -167,7 +179,7 @@ func (d *RakutenDrive) getFiles(parent string) ([]File, error) {
 		}
 		for i := range resp.File {
 			resp.File[i].parentPath = parent
-			resp.File[i].filePath = joinAPIPath(parent, resp.File[i].Path, resp.File[i].IsFolder)
+			resp.File[i].filePath = resolveFilePath(parent, resp.File[i].Path, resp.File[i].IsFolder)
 			resp.File[i].lastModifiedRaw = formatDeleteTime(resp.File[i].LastModified)
 		}
 		files = append(files, resp.File...)
