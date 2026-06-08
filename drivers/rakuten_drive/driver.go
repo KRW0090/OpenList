@@ -77,7 +77,14 @@ func (d *RakutenDrive) Link(ctx context.Context, file model.Obj, args model.Link
 }
 
 func (d *RakutenDrive) MakeDir(ctx context.Context, parentDir model.Obj, dirName string) error {
-	return errs.NotImplement
+	_, err := d.request("/cloud/service/file/v1/files/create", http.MethodPost, func(req *resty.Request) {
+		req.SetContext(ctx).SetBody(base.Json{
+			"host_id": d.UID,
+			"name":    dirName,
+			"path":    normalizeDirPath(parentDir.GetPath()),
+		})
+	}, nil)
+	return err
 }
 
 func (d *RakutenDrive) Move(ctx context.Context, srcObj, dstDir model.Obj) error {

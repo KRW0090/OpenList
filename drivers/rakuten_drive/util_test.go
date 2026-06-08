@@ -19,8 +19,8 @@ func TestFilePathAndNameFromNestedAPIPath(t *testing.T) {
 	if got := f.apiParentPath(); got != "2/" {
 		t.Fatalf("apiParentPath() = %q, want %q", got, "2/")
 	}
-	if got := f.apiPath(); got != "01 - wind.flac" {
-		t.Fatalf("apiPath() = %q, want %q", got, "01 - wind.flac")
+	if got := f.apiPath(); got != "2/01 - wind.flac" {
+		t.Fatalf("apiPath() = %q, want %q", got, "2/01 - wind.flac")
 	}
 }
 

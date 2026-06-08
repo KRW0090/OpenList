@@ -85,7 +85,7 @@ func (f *File) Thumb() string {
 
 func (f *File) apiPath() string {
 	if f.Path != "" {
-		return baseName(f.Path)
+		return f.Path
 	}
 	return baseName(f.filePath)
 }
