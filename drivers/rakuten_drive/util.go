@@ -1,6 +1,7 @@
 package rakuten_drive
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	"net/http"
@@ -190,14 +191,14 @@ func (d *RakutenDrive) getFiles(parent string) ([]File, error) {
 	return files, nil
 }
 
-func (d *RakutenDrive) waitTask(key string) error {
+func (d *RakutenDrive) waitTask(ctx context.Context, key string) error {
 	if key == "" {
 		return nil
 	}
 	for i := 0; i < 30; i++ {
 		var resp CheckResp
 		_, err := d.request("/cloud/service/file/v3/files/check", http.MethodPost, func(req *resty.Request) {
-			req.SetBody(base.Json{"key": key})
+			req.SetContext(ctx).SetBody(base.Json{"key": key})
 		}, &resp)
 		if err != nil {
 			return err
@@ -208,7 +209,11 @@ func (d *RakutenDrive) waitTask(key string) error {
 		case "failed", "fail", "error":
 			return fmt.Errorf("rakuten drive task failed: %s", resp.State)
 		}
-		time.Sleep(time.Second)
+		select {
+		case <-ctx.Done():
+			return ctx.Err()
+		case <-time.After(time.Second):
+		}
 	}
 	return fmt.Errorf("rakuten drive task timeout: %s", key)
 }

@@ -133,3 +133,23 @@ type CheckResp struct {
 	State     string `json:"state"`
 	UsageSize int64  `json:"usage_size"`
 }
+
+type UploadCheckResp struct {
+	UploadID string       `json:"upload_id"`
+	Prefix   string       `json:"prefix"`
+	File     []UploadFile `json:"file"`
+	Bucket   string       `json:"bucket"`
+	Region   string       `json:"region"`
+}
+
+type UploadFile struct {
+	Path string `json:"path"`
+	Size int64  `json:"size"`
+}
+
+type UploadTokenResp struct {
+	AccessKeyID     string    `json:"AccessKeyId"`
+	Expiration      time.Time `json:"Expiration"`
+	SecretAccessKey string    `json:"SecretAccessKey"`
+	SessionToken    string    `json:"SessionToken"`
+}

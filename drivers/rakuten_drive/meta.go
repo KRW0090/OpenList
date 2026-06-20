@@ -15,7 +15,7 @@ type Addition struct {
 var config = driver.Config{
 	Name:              "Rakuten Drive",
 	DefaultRoot:       "",
-	NoUpload:          true,
+	NoUpload:          false,
 	NoOverwriteUpload: true,
 }
 

@@ -129,11 +129,11 @@ func (d *RakutenDrive) Remove(ctx context.Context, obj model.Obj) error {
 	if err != nil {
 		return err
 	}
-	return d.waitTask(resp.Key)
+	return d.waitTask(ctx, resp.Key)
 }
 
 func (d *RakutenDrive) Put(ctx context.Context, dstDir model.Obj, file model.FileStreamer, up driver.UpdateProgress) error {
-	return errs.NotImplement
+	return d.upload(ctx, dstDir, file, up)
 }
 
 var _ driver.Driver = (*RakutenDrive)(nil)
